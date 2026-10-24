@@ -178,7 +178,6 @@ export interface Preferences {
   performanceRange: PortfolioRange;
   notifyOrderFills: boolean;
   notifyLedgerChanges: boolean;
-  confirmOrders: boolean;
   currency: "USD";
 }
 
@@ -195,7 +194,6 @@ export const DEFAULT_PREFERENCES: Preferences = {
   performanceRange: "24H",
   notifyOrderFills: true,
   notifyLedgerChanges: true,
-  confirmOrders: true,
   currency: "USD",
 };
 

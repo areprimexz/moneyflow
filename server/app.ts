@@ -1,8 +1,8 @@
 import { Hono, type Context } from "hono";
 import { z } from "zod";
-import { symbolFromSlug } from "../shared/assets";
+import { ASSET_SYMBOLS, symbolFromSlug } from "../shared/assets";
 import { DomainError } from "../shared/engine/result";
-import { CANDLE_INTERVALS, type CandleInterval } from "../shared/market/controlled";
+import { CANDLE_INTERVALS, DAY_MS, HOUR_MS, type CandleInterval } from "../shared/market/controlled";
 import type { PortfolioRange } from "../shared/types";
 import { adjustBalance, deposit, getAccount, resetAccount, setCashBalance, transfer, withdraw } from "./services/account";
 import type { Ctx } from "./services/context";
@@ -93,6 +93,14 @@ export function createApi(ctx: Ctx): Hono {
   app.get("/api/market/quotes", async (c) => {
     if (ctx.market.mode() === "live") await ctx.market.refreshLive(ctx.now());
     return c.json(ctx.market.quotes(ctx.now()));
+  });
+  app.get("/api/market/sparklines", async (c) => {
+    const now = ctx.now();
+    const times: number[] = [];
+    for (let t = now - 7 * DAY_MS; t < now; t += 4 * HOUR_MS) times.push(t);
+    times.push(now);
+    const r = await ctx.market.priceSeries([...ASSET_SYMBOLS], times, now);
+    return c.json({ available: r.available, series: Object.fromEntries(r.prices) });
   });
   app.get("/api/market/:symbol/candles", async (c) => {
     const symbol = symbolParam(c);

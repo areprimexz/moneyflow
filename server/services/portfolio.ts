@@ -228,7 +228,12 @@ export async function analytics(ctx: Ctx, range: PortfolioRange): Promise<Analyt
     } else if (t.type === "withdrawal") feesPaid = feesPaid.plus(D(t.fee));
     else if (t.type === "fee_adjustment") feesPaid = t.direction === "out" ? feesPaid.plus(D(t.fee)) : feesPaid.minus(D(t.fee));
   }
-  const volume = [...volumeMap.entries()].sort((a, b) => a[0] - b[0]).map(([time, b]) => ({ time, buy: round2(b.buy), sell: round2(b.sell) }));
+  // One bar slot per UTC day in the range so bars sit on a true time axis.
+  const volume: AnalyticsDTO["volume"] = [];
+  for (let day = Math.floor(from / DAY_MS) * DAY_MS; day <= now; day += DAY_MS) {
+    const b = volumeMap.get(day);
+    volume.push({ time: day, buy: round2(b?.buy ?? 0), sell: round2(b?.sell ?? 0) });
+  }
   const sumDec = (xs: Dec[]) => xs.reduce((a, b) => a.plus(b), ZERO);
   const totalWins = sumDec(wins);
   const totalLosses = sumDec(losses).abs();

@@ -39,7 +39,6 @@ export const preferencesPatchSchema = z
     performanceRange: rangeEnum,
     notifyOrderFills: z.boolean(),
     notifyLedgerChanges: z.boolean(),
-    confirmOrders: z.boolean(),
     currency: z.literal("USD"),
   })
   .partial()
