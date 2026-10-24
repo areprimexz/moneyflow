@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
-import { ArrowDownLeft, ArrowLeftRight, ArrowUpRight, Landmark, Lock, ShieldCheck, Unplug } from "lucide-react";
+import { ArrowDownLeft, ArrowLeftRight, ArrowUpRight, Landmark, Lock } from "lucide-react";
 import { ASSETS, getAsset } from "@shared/assets";
 import { D, ZERO } from "@shared/decimal";
 import { formatQty, formatUsd } from "@shared/format";
@@ -55,11 +55,8 @@ export default function Wallet() {
       <Card className="p-5 lg:p-6">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="flex items-center gap-2 text-xs text-muted">
-              Main portfolio <Badge tone="warn">Paper ledger</Badge>
-            </p>
+            <p className="text-xs text-muted">Main portfolio</p>
             {valuation ? <p className="tnum mt-2 text-[32px] leading-none font-semibold text-fg">{formatUsd(valuation.totalValue)}</p> : <Skeleton className="mt-2 h-9 w-56" />}
-            <p className="mt-2 text-xs text-muted">Balances are held by the application’s internal ledger in USD terms.</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <Button variant="primary" onClick={() => setAction("deposit")}><ArrowDownLeft className="h-4 w-4" /> Deposit</Button>
@@ -69,7 +66,7 @@ export default function Wallet() {
         </div>
       </Card>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2">
         <Card className="card-p">
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-[13px] font-medium text-fg"><Landmark className="h-4 w-4 text-accent" /> <Term k="spot">Spot account</Term></span>
@@ -88,14 +85,6 @@ export default function Wallet() {
           </div>
           <p className="mt-3"><Money value={vaultValue} className="text-xl font-semibold text-fg" /></p>
           <p className="mt-1 text-xs text-muted">Cash {account ? formatUsd(account.cash.vault) : "—"} · not available for trading</p>
-        </Card>
-        <Card className="card-p">
-          <div className="flex items-center justify-between">
-            <span className="flex items-center gap-2 text-[13px] font-medium text-fg"><Unplug className="h-4 w-4 text-muted" /> External wallet</span>
-            <Badge>Not connected</Badge>
-          </div>
-          <p className="mt-3 text-[13px] text-muted">No external wallet is connected. Balances shown here exist only in the paper ledger.</p>
-          <p className="mt-2 flex items-center gap-1.5 text-[11px] text-subtle"><ShieldCheck className="h-3.5 w-3.5" /> FLUX never asks for seed phrases or private keys.</p>
         </Card>
       </div>
 

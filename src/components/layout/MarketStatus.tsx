@@ -17,17 +17,18 @@ export function MarketStatus({ compact }: { compact?: boolean }) {
       </span>
     );
   }
+  // Neutral label for the built-in engine; "Live Prices" only while live data is actually flowing.
   let tone = "bg-accent";
-  let label = "Controlled market";
-  let detail = data.speed === 0 ? "Paused" : `${data.speed}× rate`;
+  let label = "Market Data";
+  let detail = data.speed === 0 ? "Paused" : "";
   if (data.mode === "live") {
     if (data.status === "ok") {
       tone = "bg-up";
-      label = "Live reference";
+      label = "Live Prices";
       detail = data.lastSuccessAt ? formatRelative(data.lastSuccessAt, now) : "";
     } else if (data.status === "degraded") {
       tone = "bg-warn";
-      label = "Live · stale";
+      label = "Prices stale";
       detail = data.lastSuccessAt ? formatRelative(data.lastSuccessAt, now) : "";
     } else {
       tone = "bg-down";
@@ -37,7 +38,7 @@ export function MarketStatus({ compact }: { compact?: boolean }) {
   }
   const tip =
     data.mode === "controlled"
-      ? "Prices come from the deterministic controlled market engine. Configure prices, volatility and movement in Settings → Market."
+      ? "Simulated prices from the built-in market data engine. Configure prices, volatility and movement in Settings → Market data."
       : (data.message ?? `Live reference prices from the configured provider. Last successful update ${data.lastSuccessAt ? new Date(data.lastSuccessAt).toLocaleTimeString() : "never"}.`);
   return (
     <Tooltip content={tip} side="bottom">

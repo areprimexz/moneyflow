@@ -1,8 +1,6 @@
 import { NavLink } from "react-router";
-import { ChevronsLeft, ChevronsRight, FlaskConical } from "lucide-react";
-import { formatUsd } from "@shared/format";
+import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import { NAV } from "@/lib/nav";
-import { usePortfolio } from "@/lib/queries";
 import { cn } from "@/lib/cn";
 import { Tooltip } from "@/components/ui/tooltip";
 import { LogoMark, Wordmark } from "./Logo";
@@ -48,7 +46,6 @@ export function NavList({ collapsed, onNavigate }: { collapsed?: boolean; onNavi
 }
 
 export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
-  const { valuation } = usePortfolio();
   return (
     <aside
       className={cn("sticky top-0 hidden h-dvh shrink-0 flex-col border-r border-line bg-sidebar transition-[width] duration-200 lg:flex", collapsed ? "w-[68px]" : "w-60")}
@@ -63,22 +60,9 @@ export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
         <NavList collapsed={collapsed} />
       </div>
       <div className="border-t border-line p-3">
-        {!collapsed ? (
-          <div className="rounded-lg border border-line bg-card px-3 py-2.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] text-muted">Paper account</span>
-              <span className="inline-flex items-center gap-1 rounded bg-warn-soft px-1.5 py-0.5 text-[10px] font-medium text-warn">
-                <FlaskConical className="h-3 w-3" aria-hidden />
-                Paper
-              </span>
-            </div>
-            <div className="num mt-1 truncate text-[15px] font-medium text-fg">{valuation ? formatUsd(valuation.totalValue) : "—"}</div>
-            <div className="mt-0.5 text-[10.5px] text-subtle">Internal ledger · USD</div>
-          </div>
-        ) : null}
         <button
           onClick={onToggle}
-          className={cn("mt-2 flex h-8 w-full items-center gap-2 rounded-lg px-2.5 text-xs text-muted transition-colors hover:bg-hover hover:text-fg", collapsed && "justify-center px-0")}
+          className={cn("flex h-8 w-full items-center gap-2 rounded-lg px-2.5 text-xs text-muted transition-colors hover:bg-hover hover:text-fg", collapsed && "justify-center px-0")}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {collapsed ? <ChevronsRight className="h-4 w-4" /> : <ChevronsLeft className="h-4 w-4" />}
