@@ -11,7 +11,7 @@ import { ACCOUNT_ID, type Ctx, type DbOrTx } from "./context";
 import { USD, assetDecimals, availableSpot, loadBalances, loadOpenLots, loadReservations, postTransaction } from "./ledger";
 import { executeFill, getFees } from "./trading";
 
-export const DEFAULT_INITIAL_BALANCE = "9999.00";
+export const DEFAULT_INITIAL_BALANCE = "0.00";
 export const RESET_CONFIRMATION = "RESET";
 
 function accountRow(db: DbOrTx) {
@@ -194,6 +194,7 @@ export function resetAccount(ctx: Ctx, input: ResetInput): AccountDTO {
   if (now - baselineAt > 5 * 365 * 86_400_000) throw new DomainError("Baseline date cannot be more than 5 years in the past.", "invalid_baseline");
   if (startingState === "demo" && input.baselineAt === undefined) baselineAt = now - 120 * 86_400_000;
   if (startingState === "demo" && now - baselineAt < 60 * 60 * 1000) throw new DomainError("A sample portfolio needs a baseline date at least one hour in the past.", "baseline_too_recent");
+  if (startingState === "demo" && initial.isZero()) throw new DomainError("A sample portfolio needs a starting balance above $0.00.", "invalid_initial_balance");
   if (input.resetMarket) ctx.market.resetControlled(now);
   if (input.resetPreferences) ctx.store.delete("preferences");
   ctx.db.transaction((tx) => {

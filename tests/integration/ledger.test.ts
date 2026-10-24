@@ -39,6 +39,25 @@ function expectDomainError(fn: () => unknown, code: string) {
 }
 
 describe("account initialisation and balances", () => {
+  it("starts a brand-new account at $0.00 with no transactions by default", () => {
+    const clock = new FakeClock();
+    flux = Object.assign(createFlux({ dbPath: ":memory:", now: clock.now, provider: null }), { clock });
+    const a = getAccount(flux.ctx);
+    expect(a.initialBalance).toBe("0");
+    expect(a.cash.total).toBe("0");
+    expect(formatUsd(value(flux).totalValue)).toBe("$0.00");
+    expect(listTransactions(flux.ctx.db)).toHaveLength(0);
+    // Funds can then be added through the ledger.
+    deposit(flux.ctx, { asset: "USD", amount: "500" });
+    expect(formatUsd(value(flux).totalValue)).toBe("$500.00");
+  });
+
+  it("rejects a sample portfolio without a starting balance", () => {
+    const f = setup();
+    expectDomainError(() => resetAccount(f.ctx, { confirm: "RESET", startingState: "demo", initialBalance: "0" }), "invalid_initial_balance");
+    expect(getAccount(f.ctx).cash.total).toBe("9999");
+  });
+
   it("initialises a new portfolio with $9,999.00 USD", () => {
     const f = setup();
     const a = getAccount(f.ctx);
@@ -339,7 +358,7 @@ describe("ledger integrity", () => {
   it("persists data across application restarts", () => {
     const db = tempDbPath();
     const clock = new FakeClock();
-    let f = createFlux({ dbPath: db.path, now: clock.now, provider: null });
+    let f = createFlux({ dbPath: db.path, now: clock.now, provider: null, initialBalance: "9999" });
     placeOrder(f.ctx, { clientOrderId: cid(), symbol: "BTC", side: "buy", type: "market", quantity: "0.03" });
     updateMarketAsset(f.ctx, "ADA", { price: "1.2345" });
     const before = getAccount(f.ctx);

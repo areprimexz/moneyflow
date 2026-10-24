@@ -82,7 +82,7 @@ export function AccountSection() {
         <div className="grid gap-4 md:grid-cols-2">
           <Field label="Display currency" htmlFor="currency" hint="All balances are maintained and displayed in US dollars.">
             <Select id="currency" value="USD" disabled>
-              <option value="USD">USD — US Dollar ($9,999.00)</option>
+              <option value="USD">USD — US Dollar</option>
             </Select>
           </Field>
           <div className="text-xs text-muted">

@@ -30,7 +30,7 @@ export interface ResetPreset {
 export function ResetDialog({ open, onOpenChange, preset }: { open: boolean; onOpenChange: (o: boolean) => void; preset?: ResetPreset }) {
   const account = useAccount().data;
   const qc = useQueryClient();
-  const [balance, setBalance] = useState("9999.00");
+  const [balance, setBalance] = useState("0.00");
   const [state, setState] = useState<"cash" | "demo">("cash");
   const [baseline, setBaseline] = useState(toDateInput(Date.now()));
   const [resetPrefs, setResetPrefs] = useState(false);
@@ -41,7 +41,7 @@ export function ResetDialog({ open, onOpenChange, preset }: { open: boolean; onO
   useEffect(() => {
     if (!open) return;
     const s = preset?.startingState ?? "cash";
-    setBalance(preset?.initialBalance ?? (account ? Number(account.initialBalance).toFixed(2) : "9999.00"));
+    setBalance(preset?.initialBalance ?? (account ? Number(account.initialBalance).toFixed(2) : "0.00"));
     setState(s);
     setBaseline(preset?.baselineDate ?? toDateInput(s === "demo" ? Date.now() - 120 * 86_400_000 : Date.now()));
     setResetPrefs(false);
@@ -51,6 +51,7 @@ export function ResetDialog({ open, onOpenChange, preset }: { open: boolean; onO
   }, [open, preset, account]);
 
   const parsed = parseUsdInput(balance, { label: "Starting balance", allowZero: true });
+  const balanceError = !parsed.ok ? parsed.error : state === "demo" && parsed.value.isZero() ? "A sample portfolio needs a starting balance above $0.00." : null;
   const today = toDateInput(Date.now());
   const baselineMs = (() => {
     if (!baseline) return NaN;
@@ -84,7 +85,7 @@ export function ResetDialog({ open, onOpenChange, preset }: { open: boolean; onO
     onError: (e: Error) => toast.error("Reset failed — nothing was changed", { description: e.message }),
   });
 
-  const valid = parsed.ok && !baselineError && confirm === "RESET";
+  const valid = parsed.ok && !balanceError && !baselineError && confirm === "RESET";
   return (
     <Dialog
       open={open}
@@ -118,8 +119,8 @@ export function ResetDialog({ open, onOpenChange, preset }: { open: boolean; onO
           </ul>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Starting balance (USD)" htmlFor="reset-balance" error={touched && !parsed.ok ? parsed.error : null} hint={parsed.ok ? formatUsd(parsed.value) : undefined}>
-            <DecimalInput id="reset-balance" value={balance} onValueChange={setBalance} onBlur={() => setTouched(true)} prefix="$" invalid={touched && !parsed.ok} />
+          <Field label="Starting balance (USD)" htmlFor="reset-balance" error={touched || state === "demo" ? balanceError : null} hint={parsed.ok ? formatUsd(parsed.value) : undefined}>
+            <DecimalInput id="reset-balance" value={balance} onValueChange={setBalance} onBlur={() => setTouched(true)} prefix="$" invalid={Boolean((touched || state === "demo") && balanceError)} />
           </Field>
           <Field label="Baseline date" htmlFor="reset-baseline" error={baselineError} hint="Date of the opening deposit.">
             <Input id="reset-baseline" type="date" max={today} value={baseline} onChange={(e) => setBaseline(e.target.value)} invalid={Boolean(baselineError)} />

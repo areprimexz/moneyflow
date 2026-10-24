@@ -169,13 +169,23 @@ export default function Overview() {
           ) : (
             <EmptyState
               icon={<Wallet className="h-5 w-5" />}
-              title="Your portfolio is all cash"
-              description={`${formatUsd(valuation?.cash ?? 0)} is ready to trade. Place a trade, or load a sample portfolio with history.`}
+              title={valuation?.cash.isZero() ? "Your account is empty" : "Your portfolio is all cash"}
+              description={
+                valuation?.cash.isZero()
+                  ? "Deposit funds to start trading, or load a sample portfolio with history."
+                  : `${formatUsd(valuation?.cash ?? 0)} is ready to trade. Place a trade, or load a sample portfolio with history.`
+              }
               action={
                 <>
-                  <Button variant="primary" onClick={() => navigate(`/trade/${pairSlug(prefs.defaultMarket)}`)}>
-                    Buy your first asset
-                  </Button>
+                  {valuation?.cash.isZero() ? (
+                    <Button variant="primary" onClick={() => navigate("/wallet?action=deposit")}>
+                      Deposit funds
+                    </Button>
+                  ) : (
+                    <Button variant="primary" onClick={() => navigate(`/trade/${pairSlug(prefs.defaultMarket)}`)}>
+                      Buy your first asset
+                    </Button>
+                  )}
                   <Button variant="secondary" onClick={() => setDemoOpen(true)}>
                     <Sparkles className="h-4 w-4" /> Load sample portfolio
                   </Button>
@@ -204,7 +214,7 @@ export default function Overview() {
         </Card>
         <WatchlistCard />
       </div>
-      <ResetDialog open={demoOpen} onOpenChange={setDemoOpen} preset={{ startingState: "demo", initialBalance: account ? D(account.initialBalance).toFixed(2) : undefined }} />
+      <ResetDialog open={demoOpen} onOpenChange={setDemoOpen} preset={{ startingState: "demo", initialBalance: account && D(account.initialBalance).gt(0) ? D(account.initialBalance).toFixed(2) : "10000.00" }} />
     </div>
   );
 }

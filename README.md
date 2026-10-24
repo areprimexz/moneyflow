@@ -21,14 +21,15 @@ npm run build        # type-check + bundle the client into dist/
 npm start            # serves API + client on http://localhost:4173
 ```
 
-The SQLite database is created at `data/flux.db` on first start, with an opening balance of
-**$9,999.00**. It survives restarts; use **Settings → Reset** to start over.
+The SQLite database is created at `data/flux.db` on first start with a balance of **$0.00**;
+add funds with **Wallet → Deposit** or **Settings → Cash & ledger adjustments**. Data survives
+restarts; use **Settings → Reset** to start over.
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
 | `PORT` | `4173` | Port of `npm start` (and `8787` for the API-only `npm run dev:api`) |
 | `FLUX_DB_PATH` | `data/flux.db` | SQLite database file |
-| `FLUX_INITIAL_BALANCE` | `9999.00` | Opening balance for a brand-new database |
+| `FLUX_INITIAL_BALANCE` | `0.00` | Opening balance for a brand-new database |
 | `COINGECKO_API_KEY` | – | Optional key for live reference prices (server-side only) |
 | `COINGECKO_API_PLAN` | `demo` | `demo` or `pro` (selects host and header) |
 | `COINGECKO_BASE_URL` | provider default | Override the provider URL |

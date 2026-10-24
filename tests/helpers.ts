@@ -18,7 +18,8 @@ export class FakeClock {
 
 export function makeFlux(opts: { clock?: FakeClock; dbPath?: string; initialBalance?: string } = {}): Flux & { clock: FakeClock } {
   const clock = opts.clock ?? new FakeClock();
-  const flux = createFlux({ dbPath: opts.dbPath ?? ":memory:", now: clock.now, provider: null, initialBalance: opts.initialBalance });
+  // Trading tests run against a funded fixture account; the app default for a new account is $0.00.
+  const flux = createFlux({ dbPath: opts.dbPath ?? ":memory:", now: clock.now, provider: null, initialBalance: opts.initialBalance ?? "9999" });
   return Object.assign(flux, { clock });
 }
 

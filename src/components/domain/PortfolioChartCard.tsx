@@ -81,6 +81,10 @@ export function PortfolioChartCard({ height = 300 }: { height?: number }) {
           <ErrorState message={history.data.message ?? "History is unavailable from the current data source."} onRetry={() => history.refetch()} />
         ) : points.length < 2 ? (
           <Skeleton className="mx-3 rounded-lg" />
+        ) : points.every((p) => p.value === 0) ? (
+          <div className="flex items-center justify-center px-6 text-center text-[13px] text-muted" style={{ height }}>
+            No balance yet. Deposit funds to start tracking performance.
+          </div>
         ) : (
           <ValueChart
             points={points}
@@ -94,7 +98,7 @@ export function PortfolioChartCard({ height = 300 }: { height?: number }) {
         )}
         {!history.data && !history.isError && <Skeleton className="mx-3 rounded-lg" />}
       </div>
-      {history.data && D(history.data.startValue).isZero() && points.length > 0 && (
+      {history.data && D(history.data.startValue).isZero() && points.some((p) => p.value !== 0) && (
         <p className="px-[var(--card-p)] pb-3 text-xs text-subtle">The account had no value at the start of this interval.</p>
       )}
     </Card>

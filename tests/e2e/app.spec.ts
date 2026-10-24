@@ -5,12 +5,22 @@ test.beforeEach(async ({ request }) => {
   await resetAccount(request);
 });
 
-test("opens on the dashboard with the $9,999.00 USD default balance", async ({ page }) => {
+test("opens on the dashboard with a configured $9,999.00 USD balance", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1, name: "Overview" })).toBeVisible();
   await expect(page.getByTestId("portfolio-total")).toHaveText("$9,999.00");
   await expect(page.getByText("USD", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("Your portfolio is all cash")).toBeVisible();
+});
+
+test("an empty $0.00 account leads with a deposit", async ({ page, request }) => {
+  await resetAccount(request, { initialBalance: "0" });
+  await page.goto("/");
+  await expect(page.getByTestId("portfolio-total")).toHaveText("$0.00");
+  await expect(page.getByText("Your account is empty")).toBeVisible();
+  await page.getByRole("button", { name: "Deposit funds" }).click();
+  await expect(page).toHaveURL(/\/wallet/);
+  await expect(page.getByRole("dialog", { name: "Deposit" })).toBeVisible();
 });
 
 test("every main navigation destination works", async ({ page }) => {
