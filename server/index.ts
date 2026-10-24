@@ -26,8 +26,14 @@ if (production) {
   app.get("*", (c) => (c.req.path.startsWith("/api/") ? c.json({ error: { code: "not_found", message: "Endpoint not found." } }, 404) : c.html(indexHtml)));
 }
 
-const server = serve({ fetch: app.fetch, port, hostname: process.env.HOST ?? "0.0.0.0" }, (info) => {
+// No hostname: Node listens on all interfaces, IPv4 and IPv6 ("localhost" may resolve to either).
+const server = serve({ fetch: app.fetch, port, hostname: process.env.HOST || undefined }, (info) => {
   console.log(`FLUX FINANCE ${production ? "server" : "API"} listening on http://localhost:${info.port} (database: ${dbPath})`);
+});
+
+server.on("error", (e: NodeJS.ErrnoException) => {
+  console.error(e.code === "EADDRINUSE" ? `Port ${port} is already in use. Stop the other process or set PORT / API_PORT to a free port.` : e);
+  process.exit(1);
 });
 
 function shutdown() {

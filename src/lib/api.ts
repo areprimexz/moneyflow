@@ -48,6 +48,10 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
   }
   if (!res.ok) {
     const e = (data as { error?: { message?: string; code?: string } } | null)?.error;
+    if (!e && res.status >= 500) {
+      // No API error body: the dev proxy could not reach the API process.
+      throw new ApiError("Cannot reach the FLUX FINANCE API server. Check the terminal running `npm run dev` for an [api] error.", res.status, "api_unreachable");
+    }
     throw new ApiError(e?.message ?? `Request failed (HTTP ${res.status}).`, res.status, e?.code ?? "request_failed");
   }
   return data as T;
