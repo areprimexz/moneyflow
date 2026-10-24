@@ -7,9 +7,12 @@ or blockchain.
 ## Quick start
 
 ```bash
-npm install          # Node 22+
-npm run dev          # API on :8787 + web app on http://localhost:5173
+npm install          # Node.js 22.13 or newer
+npm run dev          # web app + API on http://localhost:5173
 ```
+
+The commands are identical in PowerShell, Command Prompt and macOS/Linux shells. In development
+the API runs inside the Vite dev server, so there is a single port and no proxy.
 
 Production build:
 
@@ -23,13 +26,28 @@ The SQLite database is created at `data/flux.db` on first start, with an opening
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `PORT` | `8787` (dev) / `4173` (prod) | HTTP port of the server |
+| `PORT` | `4173` | Port of `npm start` (and `8787` for the API-only `npm run dev:api`) |
 | `FLUX_DB_PATH` | `data/flux.db` | SQLite database file |
 | `FLUX_INITIAL_BALANCE` | `9999.00` | Opening balance for a brand-new database |
 | `COINGECKO_API_KEY` | – | Optional key for live reference prices (server-side only) |
 | `COINGECKO_API_PLAN` | `demo` | `demo` or `pro` (selects host and header) |
 | `COINGECKO_BASE_URL` | provider default | Override the provider URL |
-| `API_PORT` | `8787` | Port the Vite dev server proxies `/api` to |
+| `FLUX_SQLITE_DRIVER` | `auto` | `auto`, `better-sqlite3` or `node` (built-in `node:sqlite`) |
+
+Setting a variable: PowerShell `$env:PORT=5000; npm start` · Command Prompt `set PORT=5000`
+then `npm start` · macOS/Linux `PORT=5000 npm start`.
+
+### Troubleshooting
+
+* **"Cannot reach the FLUX FINANCE API server" / "The FLUX API failed to start"** — the
+  message shows the reason; the terminal running `npm run dev` prints the full error.
+* **SQLite driver** — the app prefers the native `better-sqlite3` add-on. If it cannot load
+  (no prebuilt binary for your platform and no C++ build tools), it automatically falls back
+  to Node's built-in `node:sqlite` and logs `driver: node:sqlite`. Both use the same
+  `data/flux.db` file.
+* **PowerShell "running scripts is disabled"** — run
+  `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, or use Command Prompt.
+* **End-to-end tests** need a browser: `npx playwright install chromium`.
 
 ## Checks
 

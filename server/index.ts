@@ -9,7 +9,13 @@ const production = process.env.NODE_ENV === "production";
 const port = Number(process.env.PORT ?? (production ? 4173 : 8787));
 const dbPath = process.env.FLUX_DB_PATH ?? resolve(process.cwd(), "data/flux.db");
 
-const flux = createFlux({ dbPath, initialBalance: process.env.FLUX_INITIAL_BALANCE });
+let flux: ReturnType<typeof createFlux>;
+try {
+  flux = createFlux({ dbPath, initialBalance: process.env.FLUX_INITIAL_BALANCE });
+} catch (e) {
+  console.error(`\nFLUX FINANCE could not start: ${e instanceof Error ? e.message : String(e)}\n`);
+  process.exit(1);
+}
 flux.startBackground();
 const app = createApi(flux.ctx);
 
@@ -28,7 +34,7 @@ if (production) {
 
 // No hostname: Node listens on all interfaces, IPv4 and IPv6 ("localhost" may resolve to either).
 const server = serve({ fetch: app.fetch, port, hostname: process.env.HOST || undefined }, (info) => {
-  console.log(`FLUX FINANCE ${production ? "server" : "API"} listening on http://localhost:${info.port} (database: ${dbPath})`);
+  console.log(`FLUX FINANCE ${production ? "server" : "API"} listening on http://localhost:${info.port} (database: ${dbPath}, driver: ${flux.handle.sqlite.driver})`);
 });
 
 server.on("error", (e: NodeJS.ErrnoException) => {
