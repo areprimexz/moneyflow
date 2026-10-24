@@ -296,7 +296,7 @@ export function OrderForm({ symbol, initialSide = "buy", prefill }: { symbol: st
           </div>
         </div>
 
-        {touched && error && (
+        {(touched || halted || liveBlocked) && error && (
           <p role="alert" className="flex items-start gap-1.5 text-xs text-down">
             <AlertCircle className="mt-px h-3.5 w-3.5 shrink-0" /> {error}
           </p>

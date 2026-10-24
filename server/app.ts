@@ -91,7 +91,11 @@ export function createApi(ctx: Ctx): Hono {
 
   // Market data ----------------------------------------------------------------
   app.get("/api/market/quotes", async (c) => {
-    if (ctx.market.mode() === "live") await ctx.market.refreshLive(ctx.now());
+    if (ctx.market.mode() === "live") {
+      // Wait for the provider only when there is no cached data yet; otherwise refresh in the background.
+      const refresh = ctx.market.refreshLive(ctx.now());
+      if (ctx.market.liveStatus().fetchedAt === null) await refresh;
+    }
     return c.json(ctx.market.quotes(ctx.now()));
   });
   app.get("/api/market/sparklines", async (c) => {

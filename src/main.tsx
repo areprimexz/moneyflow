@@ -3,8 +3,8 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router";
 import { MutationCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Tooltip } from "radix-ui";
-import { Toaster } from "sonner";
 import App from "./App";
+import { ThemedToaster } from "./components/layout/ThemedToaster";
 import "./index.css";
 
 const queryClient = new QueryClient({
@@ -24,18 +24,7 @@ createRoot(document.getElementById("root")!).render(
       <BrowserRouter>
         <Tooltip.Provider delayDuration={250} skipDelayDuration={100}>
           <App />
-          <Toaster
-            position="bottom-right"
-            theme="system"
-            toastOptions={{
-              classNames: {
-                toast: "!bg-card !border !border-line-strong !text-fg !rounded-xl !shadow-2xl",
-                description: "!text-muted",
-              },
-            }}
-            offset={{ bottom: 24, right: 24 }}
-            mobileOffset={{ bottom: 76 }}
-          />
+          <ThemedToaster />
         </Tooltip.Provider>
       </BrowserRouter>
     </QueryClientProvider>
