@@ -51,7 +51,7 @@ export default function MarketDetail() {
                 <div className="mt-1 flex flex-wrap items-baseline gap-3">
                   <span className="num text-2xl font-semibold text-fg">{formatPrice(quote.price, meta.priceDecimals)}</span>
                   <ChangePill value={quote.change24h} size="md" />
-                  <span className="text-xs text-subtle">{quote.source === "live" ? "Live reference" : quote.source === "controlled-fallback" ? "Controlled fallback" : "Controlled market"}</span>
+                  <span className="text-xs text-subtle">{quote.source === "live" ? "Live prices" : quote.source === "controlled-fallback" ? "Fallback prices" : "Market Data"}</span>
                 </div>
               ) : (
                 <Skeleton className="mt-2 h-7 w-48" />
@@ -118,7 +118,7 @@ export default function MarketDetail() {
         </div>
       </div>
       <Card>
-        <CardHeader title="Recent market trades" description={quote?.source === "controlled" ? "Simulated prints from the controlled market" : undefined} />
+        <CardHeader title="Recent market trades" />
         <TradesTape symbol={symbol} rows={14} />
       </Card>
     </div>

@@ -23,7 +23,7 @@ export function TransactionDetail({ id, onClose }: { id: string | undefined; onC
     );
   };
   return (
-    <Dialog open={Boolean(id)} onOpenChange={(o) => !o && onClose()} title="Transaction details" description="Internal paper-ledger record" side="right">
+    <Dialog open={Boolean(id)} onOpenChange={(o) => !o && onClose()} title="Transaction details" description="Ledger record" side="right">
       {q.isError ? (
         <ErrorState message={(q.error as Error).message} />
       ) : !t ? (
@@ -70,7 +70,7 @@ export function TransactionDetail({ id, onClose }: { id: string | undefined; onC
             <DetailRow label="Sequence" value={`#${t.seq}`} />
             {t.orderId && <DetailRow label="Related order" value={<Link className="text-accent hover:underline" to={`/trade/${t.asset}-USD`}>{t.orderId}</Link>} />}
             <DetailRow label="Account" value={t.counterAccount ? `${accountLabel(t.account)} → ${accountLabel(t.counterAccount)}` : accountLabel(t.account)} mono={false} />
-            <DetailRow label="Status" value="Settled on internal ledger (not a blockchain transaction)" mono={false} />
+            <DetailRow label="Status" value="Settled" mono={false} />
             {t.reason && <DetailRow label="Reason" value={t.reason} mono={false} />}
             {t.note && <DetailRow label="Note" value={t.note} mono={false} />}
           </section>

@@ -97,7 +97,7 @@ export function ResetSection() {
   const [open, setOpen] = useState(false);
   return (
     <Card id="reset" className="scroll-mt-20 border-down/25">
-      <CardHeader title="Reset paper account" description="Start over with a fresh opening balance" icon={<RotateCcw className="h-4 w-4" />} />
+      <CardHeader title="Reset account" description="Start over with a fresh opening balance" icon={<RotateCcw className="h-4 w-4" />} />
       <div className="card-p pt-3">
         <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
           <div className="text-[13px] text-muted">

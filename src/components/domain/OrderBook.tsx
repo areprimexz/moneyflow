@@ -59,7 +59,7 @@ export function OrderBook({ symbol, onPickPrice, levels = 10 }: { symbol: string
         </span>
       </div>
       <Rows levels={bids} side="bid" max={max} decimals={meta.priceDecimals} qtyDecimals={meta.qtyDecimals} onPick={onPickPrice} />
-      <p className="px-3 pt-2 text-[10.5px] text-subtle">Simulated depth · click a level to set a limit price</p>
+      <p className="px-3 pt-2 text-[10.5px] text-subtle">Click a level to set a limit price</p>
     </div>
   );
 }

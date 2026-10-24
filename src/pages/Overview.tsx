@@ -170,14 +170,14 @@ export default function Overview() {
             <EmptyState
               icon={<Wallet className="h-5 w-5" />}
               title="Your portfolio is all cash"
-              description={`${formatUsd(valuation?.cash ?? 0)} is ready to trade. Place a paper trade, or load a deterministic demo portfolio with sample history.`}
+              description={`${formatUsd(valuation?.cash ?? 0)} is ready to trade. Place a trade, or load a sample portfolio with history.`}
               action={
                 <>
                   <Button variant="primary" onClick={() => navigate(`/trade/${pairSlug(prefs.defaultMarket)}`)}>
                     Buy your first asset
                   </Button>
                   <Button variant="secondary" onClick={() => setDemoOpen(true)}>
-                    <Sparkles className="h-4 w-4" /> Load demo portfolio
+                    <Sparkles className="h-4 w-4" /> Load sample portfolio
                   </Button>
                 </>
               }

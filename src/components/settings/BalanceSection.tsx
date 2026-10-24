@@ -19,7 +19,7 @@ import { Segmented } from "@/components/ui/segmented";
 import { Table, Td, Th, Tr } from "@/components/ui/table";
 import { Money } from "@/components/ui/values";
 
-const REASONS = ["Funding top-up", "Ledger correction", "Promotional credit", "Fee rebate", "Simulation reset of cash", "Test scenario"];
+const REASONS = ["Funding top-up", "Ledger correction", "Promotional credit", "Fee rebate"];
 
 function useAdjustmentSuccess() {
   const invalidate = useLedgerInvalidation();
@@ -79,7 +79,7 @@ function SetCashForm() {
         open={open}
         onOpenChange={(o) => !mutation.isPending && setOpen(o)}
         title="Confirm cash balance change"
-        description="This posts an administrative adjustment to the paper ledger."
+        description="This posts an administrative adjustment to the ledger."
         size="sm"
         footer={
           <>
@@ -176,7 +176,7 @@ function AdjustmentForm() {
       </p>
       <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <Checkbox label="I confirm this adjustment should be posted to the paper ledger" checked={confirmed} onChange={setConfirmed} />
+          <Checkbox label="I confirm this adjustment should be posted to the ledger" checked={confirmed} onChange={setConfirmed} />
           {touched && errors.confirm && (
             <p role="alert" className="mt-1 text-xs text-down">
               {errors.confirm}
@@ -191,7 +191,7 @@ function AdjustmentForm() {
         open={open}
         onOpenChange={(o) => !mutation.isPending && setOpen(o)}
         title="Post ledger adjustment?"
-        description="Financially significant change to the paper account."
+        description="Financially significant change to the account."
         size="sm"
         footer={
           <>
@@ -221,7 +221,7 @@ export function BalanceSection() {
   const adjustments = (txs.data ?? []).filter((t) => t.type === "balance_adjustment" || t.type === "fee_adjustment").slice(0, 8);
   return (
     <Card id="balance" className="scroll-mt-20">
-      <CardHeader title="Cash & ledger adjustments" description="Change the paper cash balance through explicit, auditable ledger entries" icon={<Scale className="h-4 w-4" />} />
+      <CardHeader title="Cash & ledger adjustments" description="Change the cash balance through explicit, auditable ledger entries" icon={<Scale className="h-4 w-4" />} />
       <div className="card-p space-y-4 pt-4">
         <SetCashForm />
         <AdjustmentForm />

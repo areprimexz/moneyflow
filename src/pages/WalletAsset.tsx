@@ -5,7 +5,6 @@ import { getAsset, pairSlug } from "@shared/assets";
 import { D, ZERO } from "@shared/decimal";
 import { formatPrice, formatQty, formatUsd } from "@shared/format";
 import { usePortfolio, useTransactions } from "@/lib/queries";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
 import { DetailRow } from "@/components/ui/dialog";
@@ -69,11 +68,11 @@ export default function WalletAsset() {
           </div>
         </Card>
         <Card>
-          <CardHeader title="Network & asset metadata" description="Reference information — the paper ledger does not interact with any network" />
+          <CardHeader title="Network & asset metadata" description="Network and asset details" />
           <div className="card-p pt-3">
             {isUsd ? (
               <>
-                <DetailRow label="Ledger" value="Internal USD cash ledger" mono={false} />
+                <DetailRow label="Ledger" value="USD cash" mono={false} />
                 <DetailRow label="Precision" value="2 decimals (cents)" mono={false} />
                 <DetailRow label="Deposit / withdrawal fee" value="$0.00" />
               </>
@@ -84,12 +83,11 @@ export default function WalletAsset() {
                 <DetailRow label="Consensus" value={meta!.network.consensus} mono={false} />
                 <DetailRow label="Average block time" value={meta!.network.avgBlockTime} mono={false} />
                 <DetailRow label="Typical exchange confirmations" value={String(meta!.network.confirmations)} />
-                <DetailRow label="Simulated withdrawal fee" value={`${meta!.network.withdrawalFee} ${symbol}`} />
+                <DetailRow label="Withdrawal fee" value={`${meta!.network.withdrawalFee} ${symbol}`} />
                 <DetailRow label="Minimum withdrawal" value={`${meta!.network.minWithdrawal} ${symbol}`} />
                 <DetailRow label="Quantity precision" value={`${meta!.qtyDecimals} decimals`} mono={false} />
               </>
             )}
-            <div className="mt-2 flex items-center gap-2"><Badge>No on-chain address</Badge><Badge>Not connected</Badge></div>
           </div>
         </Card>
       </div>

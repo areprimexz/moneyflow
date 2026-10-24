@@ -16,7 +16,7 @@ export function transactionsToCsv(rows: TransactionDTO[]): string {
       t.id,
       new Date(t.createdAt).toISOString(),
       TX_LABEL[t.type],
-      "settled (internal ledger)",
+      "settled",
       t.asset,
       t.quantity,
       t.unitPrice,

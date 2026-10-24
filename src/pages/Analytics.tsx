@@ -51,7 +51,7 @@ export default function Analytics() {
         <div className="flex items-center gap-2">
           <span className="hidden text-xs text-muted sm:inline">Measured over {RANGE_LABEL[range]} · UTC days</span>
           <Button variant="outline" size="sm" onClick={() => setResetOpen(true)}>
-            <RotateCcw className="h-3.5 w-3.5" /> Reset paper account
+            <RotateCcw className="h-3.5 w-3.5" /> Reset account
           </Button>
         </div>
       </div>

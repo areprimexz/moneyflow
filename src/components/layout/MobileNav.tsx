@@ -57,7 +57,6 @@ export function MobileMenu() {
           <div className="flex-1 overflow-y-auto p-3">
             <NavList onNavigate={() => setOpen(false)} />
           </div>
-          <p className="border-t border-line px-4 py-3 text-[11px] text-subtle">Paper-trading account · internal USD ledger</p>
         </RDialog.Content>
       </RDialog.Portal>
     </RDialog.Root>

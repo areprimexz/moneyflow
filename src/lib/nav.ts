@@ -10,7 +10,7 @@ export interface NavItem {
 export const NAV: NavItem[] = [
   { to: "/", label: "Overview", icon: LayoutDashboard, description: "Portfolio dashboard" },
   { to: "/markets", label: "Markets", icon: BarChart3, description: "Prices, watchlist and asset details" },
-  { to: "/trade", label: "Trade", icon: ArrowLeftRight, description: "Paper-trading terminal" },
+  { to: "/trade", label: "Trade", icon: ArrowLeftRight, description: "Trading terminal" },
   { to: "/portfolio", label: "Portfolio", icon: PieChart, description: "Holdings, cost basis and P/L" },
   { to: "/wallet", label: "Wallet", icon: Wallet, description: "Spot and Vault balances" },
   { to: "/transactions", label: "Transactions", icon: ReceiptText, description: "Ledger history" },

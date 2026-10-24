@@ -311,7 +311,7 @@ export function OrderForm({ symbol, initialSide = "buy", prefill }: { symbol: st
         open={confirmOpen}
         onOpenChange={(o) => !mutation.isPending && setConfirmOpen(o)}
         title={`Confirm ${type} ${side}`}
-        description={`${symbol}/USD · paper trade on the internal ledger`}
+        description={`${symbol}/USD`}
         size="sm"
         footer={
           <>
@@ -344,8 +344,7 @@ export function OrderForm({ symbol, initialSide = "buy", prefill }: { symbol: st
             <p className="mt-3 rounded-lg bg-elevated px-3 py-2 text-[11px] leading-relaxed text-muted">
               {type === "market" || marketable
                 ? "Market orders execute at the reference price at the moment the server processes the order, which may differ slightly from this estimate."
-                : "The order rests until the reference price reaches your limit, then fills at the limit price with the maker fee. You can cancel it at any time before it fills."}{" "}
-              This is a paper trade recorded on the internal ledger; nothing is sent to an exchange or blockchain.
+                : "The order rests until the reference price reaches your limit, then fills at the limit price with the maker fee. You can cancel it at any time before it fills."}
             </p>
             {submitError && (
               <p role="alert" className="mt-3 text-xs text-down">

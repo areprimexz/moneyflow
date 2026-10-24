@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router";
-import { FlaskConical, Moon, RotateCcw, Settings, Sun, UserRound } from "lucide-react";
+import { Moon, RotateCcw, Settings, Sun, UserRound } from "lucide-react";
 import { navForPath } from "@/lib/nav";
 import { usePreferences, useUpdatePreferences } from "@/lib/queries";
 import { Menu, MenuItem, MenuLabel, MenuSeparator } from "@/components/ui/menu";
@@ -53,10 +53,7 @@ export function TopBar() {
             }
           >
             <div className="px-2.5 py-2">
-              <p className="text-[13px] font-medium text-fg">Local paper account</p>
-              <p className="mt-0.5 flex items-center gap-1 text-[11px] text-warn">
-                <FlaskConical className="h-3 w-3" /> Paper trading · internal ledger
-              </p>
+              <p className="text-[13px] font-medium text-fg">Local account</p>
             </div>
             <MenuSeparator />
             <MenuLabel>Account</MenuLabel>
@@ -64,7 +61,7 @@ export function TopBar() {
               Settings
             </MenuItem>
             <MenuItem icon={<RotateCcw className="h-4 w-4" />} onSelect={() => navigate("/settings#reset")}>
-              Reset paper account
+              Reset account
             </MenuItem>
           </Menu>
         </div>

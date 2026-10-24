@@ -61,13 +61,13 @@ export default function Markets() {
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Card className="card-p">
           <p className="text-xs text-muted">Data source</p>
-          <p className="mt-2 text-[15px] font-medium text-fg">{isLive ? <Term k="live">Live reference</Term> : <Term k="controlled">Controlled market</Term>}</p>
+          <p className="mt-2 text-[15px] font-medium text-fg">{isLive ? <Term k="live">Live prices</Term> : <Term k="controlled">Market Data</Term>}</p>
           <p className="mt-1 text-xs text-muted">{isLive ? (quotes.data?.status === "ok" ? "External provider" : "Provider unavailable — see status") : quotes.data?.speed === 0 ? "Movement paused" : `Movement ${quotes.data?.speed ?? 1}×`}</p>
         </Card>
         <Card className="card-p">
           <p className="text-xs text-muted"><Term k="volume24h">24h volume</Term></p>
           <p className="num mt-2 text-[15px] font-medium text-fg">{totalVolume ? formatCompactUsd(totalVolume) : "—"}</p>
-          <p className="mt-1 text-xs text-muted">{isLive ? "Reported by provider" : "Simulated"} · {all.length} markets</p>
+          <p className="mt-1 text-xs text-muted">{isLive ? "Reported by provider · " : ""}{all.length} markets</p>
         </Card>
         <Card className="card-p">
           <p className="flex items-center gap-1.5 text-xs text-muted"><TrendingUp className="h-3.5 w-3.5 text-up" /> Top gainer</p>
@@ -202,7 +202,7 @@ export default function Markets() {
         )}
       </Card>
       <p className="text-[11px] text-subtle">
-        {ASSETS.length} markets quoted in USD. {isLive ? "Live reference prices are informational and value the paper ledger only." : "Controlled-market prices, volume and depth are simulated by the local market engine."}
+        {ASSETS.length} markets quoted in USD.
       </p>
     </div>
   );

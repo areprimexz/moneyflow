@@ -14,7 +14,7 @@ const SECTIONS = [
   { id: "fees", label: "Trading fees" },
   { id: "preferences", label: "Preferences" },
   { id: "reset", label: "Reset" },
-  { id: "about", label: "Paper trading" },
+  { id: "about", label: "About" },
 ];
 
 export default function Settings() {

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Navigate, useNavigate, useParams, useSearchParams } from "react-router";
-import { ChevronDown, FlaskConical } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { DropdownMenu } from "radix-ui";
 import { ASSETS, getAsset, pairSlug, symbolFromSlug } from "@shared/assets";
 import { formatCompactUsd, formatPrice } from "@shared/format";
@@ -9,7 +9,7 @@ import { cn } from "@/lib/cn";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Segmented } from "@/components/ui/segmented";
-import { Tooltip, Term } from "@/components/ui/tooltip";
+import { Term } from "@/components/ui/tooltip";
 import { ChangePill, Pct } from "@/components/ui/values";
 import { AssetIcon } from "@/components/domain/AssetIcon";
 import { MarketChartPanel } from "@/components/domain/MarketChartPanel";
@@ -99,7 +99,7 @@ export default function Trade() {
             <div className={cn("num text-xl font-semibold", quote && Number(quote.change24h) < 0 ? "text-down" : "text-up")}>{quote ? formatPrice(quote.price, meta.priceDecimals) : "—"}</div>
             <div className="flex items-center gap-2 text-[11px] text-muted">
               {quote && <ChangePill value={quote.change24h} className="sm:hidden" />}
-              {quote?.source === "live" ? "Live reference" : quote?.source === "controlled-fallback" ? "Controlled fallback" : "Controlled market"}
+              {quote?.source === "live" ? "Live prices" : quote?.source === "controlled-fallback" ? "Fallback prices" : "Market Data"}
             </div>
           </div>
           <div className="hidden gap-6 text-xs sm:flex">
@@ -123,11 +123,6 @@ export default function Trade() {
           <div className="ml-auto flex items-center gap-2">
             {quote && !quote.enabled && <Badge tone="warn">Trading halted</Badge>}
             {quotes.data?.mode === "live" && quotes.data.status !== "ok" && <Badge tone="down">Live prices unavailable</Badge>}
-            <Tooltip content="Orders execute against the internal paper ledger at reference prices. No funds move on any exchange or blockchain.">
-              <span className="inline-flex h-7 items-center gap-1.5 rounded-md border border-warn/30 bg-warn-soft px-2 text-[11px] font-semibold tracking-wide text-warn uppercase">
-                <FlaskConical className="h-3.5 w-3.5" /> Paper trading
-              </span>
-            </Tooltip>
           </div>
         </div>
       </Card>

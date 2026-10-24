@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Radio, ShieldCheck, SlidersHorizontal } from "lucide-react";
+import { Radio, SlidersHorizontal } from "lucide-react";
 import { D } from "@shared/decimal";
 import { formatDate, formatUsd } from "@shared/format";
 import type { MarketMode } from "@shared/types";
@@ -56,7 +56,7 @@ export function AccountSection() {
           <Field label="Starting state" htmlFor="starting-state">
             <Select id="starting-state" value={state} onChange={(e) => setState(e.target.value as "cash" | "demo")}>
               <option value="cash">Cash only</option>
-              <option value="demo">Demo portfolio (sample history)</option>
+              <option value="demo">Sample portfolio (with history)</option>
             </Select>
           </Field>
         </div>
@@ -90,7 +90,7 @@ export function AccountSection() {
             <p className="mt-1">
               Created {account ? formatDate(account.createdAt) : "—"} · {account?.totals.transactionCount ?? 0} ledger transactions · ledger revision {account?.revision ?? 0}
             </p>
-            <p className="mt-1">Local single-user paper account. No sign-in is required; account data stays server-side so authentication can be added later.</p>
+            <p className="mt-1">Local single-user account. No sign-in is required; account data stays server-side so authentication can be added later.</p>
           </div>
         </div>
       </div>
@@ -109,8 +109,8 @@ export function MarketModeSection() {
     mutationFn: (mode: MarketMode) => api.setMarketMode(mode, seed),
     onSuccess: (r) => {
       void invalidate();
-      toast.success(r.market.mode === "live" ? "Live reference prices selected" : "Controlled market selected", {
-        description: r.market.mode === "live" ? "Prices load from the provider. Trading pauses if they are unavailable." : "Prices now come from the local controlled market engine.",
+      toast.success(r.market.mode === "live" ? "Live prices selected" : "Market data selected", {
+        description: r.market.mode === "live" ? "Prices load from the provider. Trading pauses if they are unavailable." : "Prices now come from the built-in market engine.",
       });
     },
     onError: (e: Error) => toast.error("Could not change market mode", { description: e.message }),
@@ -118,7 +118,7 @@ export function MarketModeSection() {
   const options: { mode: MarketMode; title: string; body: string; icon: React.ReactNode }[] = [
     {
       mode: "controlled",
-      title: "Controlled market",
+      title: "Built-in market data",
       body: "Deterministic local engine. Configure prices, 24h changes, volatility and movement below. Always available.",
       icon: <SlidersHorizontal className="h-4 w-4" />,
     },
@@ -162,13 +162,9 @@ export function MarketModeSection() {
               Status: {quotes.data?.status === "ok" ? "receiving live reference prices" : (quotes.data?.message ?? "connecting…")}
               {quotes.data?.lastSuccessAt ? ` · last success ${new Date(quotes.data.lastSuccessAt).toLocaleTimeString()}` : ""}
             </p>
-            <Checkbox label="When switching back, start the controlled market from the latest live prices" checked={seed} onChange={setSeed} />
+            <Checkbox label="When switching back, start built-in prices from the latest live prices" checked={seed} onChange={setSeed} />
           </div>
         )}
-        <p className="flex items-start gap-1.5 text-[11px] text-subtle">
-          <ShieldCheck className="mt-px h-3.5 w-3.5 shrink-0" />
-          Live prices are external reference prices only. They value the paper ledger; they do not turn it into a brokerage or exchange account.
-        </p>
       </div>
     </Card>
   );

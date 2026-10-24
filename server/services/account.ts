@@ -43,7 +43,7 @@ function openAccount(ctx: Ctx, tx: DbOrTx, opts: { initialBalance: Dec; baseline
       direction: "in",
       account: "spot",
       reason: "Opening balance",
-      note: "Initial paper-trading balance",
+      note: "Initial balance",
       isFlow: true,
       flowValue: opts.initialBalance,
       createdAt: opts.baselineAt,
@@ -59,7 +59,7 @@ function openAccount(ctx: Ctx, tx: DbOrTx, opts: { initialBalance: Dec; baseline
  */
 function seedDemoPortfolio(ctx: Ctx, tx: DbOrTx, baselineAt: number, now: number): void {
   const span = now - baselineAt;
-  if (span < 60 * 60 * 1000) throw new DomainError("A demo portfolio needs a baseline date at least one hour in the past.", "baseline_too_recent");
+  if (span < 60 * 60 * 1000) throw new DomainError("A sample portfolio needs a baseline date at least one hour in the past.", "baseline_too_recent");
   const cfg: ControlledMarketConfig = ctx.market.controlled(now);
   const fees = getFees(ctx);
   const taker = D(fees.takerRate);
@@ -193,7 +193,7 @@ export function resetAccount(ctx: Ctx, input: ResetInput): AccountDTO {
   if (baselineAt > now) throw new DomainError("Baseline date cannot be in the future.", "invalid_baseline");
   if (now - baselineAt > 5 * 365 * 86_400_000) throw new DomainError("Baseline date cannot be more than 5 years in the past.", "invalid_baseline");
   if (startingState === "demo" && input.baselineAt === undefined) baselineAt = now - 120 * 86_400_000;
-  if (startingState === "demo" && now - baselineAt < 60 * 60 * 1000) throw new DomainError("A demo portfolio needs a baseline date at least one hour in the past.", "baseline_too_recent");
+  if (startingState === "demo" && now - baselineAt < 60 * 60 * 1000) throw new DomainError("A sample portfolio needs a baseline date at least one hour in the past.", "baseline_too_recent");
   if (input.resetMarket) ctx.market.resetControlled(now);
   if (input.resetPreferences) ctx.store.delete("preferences");
   ctx.db.transaction((tx) => {
@@ -315,7 +315,7 @@ export function deposit(ctx: Ctx, input: { asset: string; amount: string; accoun
         net: amount,
         direction: "in",
         account,
-        reason: "Paper deposit",
+        reason: "Deposit",
         note,
         isFlow: true,
         flowValue: amount,
@@ -337,7 +337,7 @@ export function deposit(ctx: Ctx, input: { asset: string; amount: string; accoun
       direction: "in",
       account,
       costBasis: value,
-      reason: "Paper deposit",
+      reason: "Deposit",
       note,
       isFlow: true,
       flowValue: value,
@@ -369,7 +369,7 @@ export function withdraw(ctx: Ctx, input: { asset: string; amount: string; accou
         net: amount,
         direction: "out",
         account,
-        reason: "Paper withdrawal",
+        reason: "Withdrawal",
         note,
         isFlow: true,
         flowValue: amount.neg(),
@@ -400,7 +400,7 @@ export function withdraw(ctx: Ctx, input: { asset: string; amount: string; accou
       costBasis: fifo.costRemoved,
       feeAsset: asset,
       feeQuantity: fee,
-      reason: "Paper withdrawal",
+      reason: "Withdrawal",
       note,
       isFlow: true,
       flowValue: gross.neg(),

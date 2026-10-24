@@ -191,8 +191,8 @@ export class MarketDataService {
       if (this.live.fetchedAt === null) {
         status = "unavailable";
         message = this.provider
-          ? `Live reference prices are unavailable${this.live.lastError ? ` (${this.live.lastError})` : ""}. Showing controlled-market prices; trading is paused until live prices load or you switch to Controlled mode.`
-          : "No live price provider is configured. Showing controlled-market prices.";
+          ? `Live reference prices are unavailable${this.live.lastError ? ` (${this.live.lastError})` : ""}. Showing fallback prices; trading is paused until live prices load or you switch to built-in market data.`
+          : "No live price provider is configured. Showing built-in prices.";
       } else if (!this.liveFresh(now)) {
         status = "degraded";
         message = `Live prices are stale (last update ${Math.round((now - this.live.fetchedAt) / 60000)} min ago)${this.live.lastError ? `: ${this.live.lastError}` : ""}. Market orders are paused.`;
@@ -243,7 +243,7 @@ export class MarketDataService {
     if (!cfg.assets[symbol]?.enabled) return err(`${symbol}/USD trading is currently halted in market settings.`, "market_halted");
     if (this.mode() === "controlled") return ok({ price: priceAt(cfg, symbol, now), source: "controlled" });
     const live = this.live.quotes.get(symbol);
-    if (!live || this.live.fetchedAt === null) return err("Live reference prices are unavailable. Switch to Controlled market mode in Settings to keep paper trading.", "price_unavailable");
+    if (!live || this.live.fetchedAt === null) return err("Live reference prices are unavailable. Switch to built-in market data in Settings to keep trading.", "price_unavailable");
     if (!this.liveFresh(now)) return err("Live reference prices are stale. Trading resumes when fresh prices arrive.", "price_stale");
     return ok({ price: new Dec(live.price).toDecimalPlaces(meta.priceDecimals), source: "live" });
   }

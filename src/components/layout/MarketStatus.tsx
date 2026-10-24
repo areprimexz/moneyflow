@@ -38,7 +38,7 @@ export function MarketStatus({ compact }: { compact?: boolean }) {
   }
   const tip =
     data.mode === "controlled"
-      ? "Simulated prices from the built-in market data engine. Configure prices, volatility and movement in Settings → Market data."
+      ? "Prices from the built-in market data engine. Configure prices, volatility and movement in Settings → Market data."
       : (data.message ?? `Live reference prices from the configured provider. Last successful update ${data.lastSuccessAt ? new Date(data.lastSuccessAt).toLocaleTimeString() : "never"}.`);
   return (
     <Tooltip content={tip} side="bottom">

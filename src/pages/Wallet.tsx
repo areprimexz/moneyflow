@@ -36,7 +36,7 @@ export default function Wallet() {
 
   const rows = useMemo(() => {
     if (!valuation || !account) return [];
-    const usd = { symbol: "USD", spot: D(account.cash.spot), vault: D(account.cash.vault), value: valuation.cash, network: "Internal USD ledger" };
+    const usd = { symbol: "USD", spot: D(account.cash.spot), vault: D(account.cash.vault), value: valuation.cash, network: "USD cash" };
     const assets = ASSETS.map((a) => {
       const p = valuation.positions.find((x) => x.symbol === a.symbol);
       return { symbol: a.symbol, spot: p?.spot ?? ZERO, vault: p?.vault ?? ZERO, value: p?.marketValue ?? ZERO, network: `${a.network.name}${a.network.standard && a.network.standard !== "Native" ? ` · ${a.network.standard}` : ""}` };
@@ -127,7 +127,7 @@ export default function Wallet() {
       </Card>
 
       <Card>
-        <CardHeader title="Wallet activity" description="Paper deposits, withdrawals and internal transfers" />
+        <CardHeader title="Wallet activity" description="Deposits, withdrawals and internal transfers" />
         <div className="mt-3">
           {!txs.data ? <SkeletonRows rows={3} /> : walletTx.length === 0 ? <EmptyState title="No wallet activity" /> : <ActivityList transactions={walletTx.slice(0, 10)} />}
         </div>

@@ -133,7 +133,7 @@ export function MarketControlsSection() {
     onSuccess: () => {
       setResetOpen(false);
       void invalidate();
-      toast.success("Controlled market reset to catalogue defaults");
+      toast.success("Market data reset to catalogue defaults");
     },
     onError: (e: Error) => toast.error("Market not reset", { description: e.message }),
   });
@@ -143,7 +143,7 @@ export function MarketControlsSection() {
     <Card id="market-controls" className="scroll-mt-20">
       <CardHeader
         title="Market controls"
-        description="Controlled-market behaviour. Every change applies consistently to Markets, Trade, Portfolio, Wallet and Analytics."
+        description="Market behaviour. Every change applies consistently to Markets, Trade, Portfolio, Wallet and Analytics."
         icon={<Activity className="h-4 w-4" />}
         actions={
           <Button size="sm" variant="outline" onClick={() => setResetOpen(true)}>
@@ -152,7 +152,7 @@ export function MarketControlsSection() {
         }
       />
       <div className="card-p pt-2">
-        {live && <p className="mb-2 rounded-lg bg-info-soft px-3 py-2 text-xs text-info">Live mode is active. Price, change and volatility edits apply to the controlled market and take effect when you switch back; enabling or halting markets applies immediately.</p>}
+        {live && <p className="mb-2 rounded-lg bg-info-soft px-3 py-2 text-xs text-info">Live mode is active. Price, change and volatility edits apply to built-in market data and take effect when you switch back; enabling or halting markets applies immediately.</p>}
         <SettingRow title="Market movement rate" description="How fast synthetic prices move. Paused freezes prices from now on; history is never rewritten.">
           <Segmented label="Market movement rate" value={String(market?.speed ?? 1)} onChange={(v) => motion.mutate({ speed: Number(v) })} options={SPEEDS.map((s) => ({ ...s, disabled: motion.isPending }))} size="xs" />
         </SettingRow>
@@ -199,7 +199,7 @@ export function MarketControlsSection() {
       <Dialog
         open={resetOpen}
         onOpenChange={setResetOpen}
-        title="Reset controlled market?"
+        title="Reset market data?"
         description="Restores catalogue prices, 24h changes, volatility and movement rate. Your ledger, holdings and orders are not changed."
         size="sm"
         footer={
@@ -244,7 +244,7 @@ export function FeesSection() {
   });
   return (
     <Card id="fees" className="scroll-mt-20">
-      <CardHeader title="Trading fees" description="Charged in USD on every paper trade" icon={<Percent className="h-4 w-4" />} />
+      <CardHeader title="Trading fees" description="Charged in USD on every trade" icon={<Percent className="h-4 w-4" />} />
       <div className="card-p grid gap-4 pt-4 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
         <Field label="Taker fee (market orders)" htmlFor="taker-fee" error={!t.ok ? t.error : null}>
           <DecimalInput id="taker-fee" value={taker} onValueChange={setTaker} suffix="%" invalid={!t.ok} />

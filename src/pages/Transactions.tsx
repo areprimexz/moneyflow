@@ -202,7 +202,6 @@ export default function Transactions() {
           </>
         )}
       </Card>
-      <p className="text-[11px] text-subtle">All entries are internal paper-ledger records. None of them is a blockchain transaction.</p>
       <TransactionDetail id={id} onClose={() => navigate("/transactions")} />
     </div>
   );

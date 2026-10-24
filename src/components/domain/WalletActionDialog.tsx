@@ -18,7 +18,7 @@ import { Segmented } from "@/components/ui/segmented";
 
 export type WalletAction = "deposit" | "withdraw" | "transfer";
 
-const TITLES: Record<WalletAction, string> = { deposit: "Paper deposit", withdraw: "Paper withdrawal", transfer: "Internal transfer" };
+const TITLES: Record<WalletAction, string> = { deposit: "Deposit", withdraw: "Withdrawal", transfer: "Internal transfer" };
 
 /**
  * Deposit, withdraw or transfer on the internal paper ledger. Nothing is sent to or
@@ -101,7 +101,6 @@ export function WalletActionDialog({ action, open, onOpenChange, asset: initialA
       open={open}
       onOpenChange={(o) => !mutation.isPending && onOpenChange(o)}
       title={TITLES[action]}
-      description="Internal paper ledger only — no blockchain or bank transfer takes place."
       footer={
         step === "form" ? (
           <>
@@ -182,21 +181,19 @@ export function WalletActionDialog({ action, open, onOpenChange, asset: initialA
               <DetailRow label="Network (reference)" value={`${meta.network.name}${meta.network.standard && meta.network.standard !== "Native" ? ` · ${meta.network.standard}` : ""}`} mono={false} />
               {action === "withdraw" && (
                 <>
-                  <DetailRow label="Simulated network fee" value={`${meta.network.withdrawalFee} ${asset}${price ? ` (${formatUsd(roundUsd(D(meta.network.withdrawalFee).times(price)))})` : ""}`} />
+                  <DetailRow label="Network fee" value={`${meta.network.withdrawalFee} ${asset}${price ? ` (${formatUsd(roundUsd(D(meta.network.withdrawalFee).times(price)))})` : ""}`} />
                   <DetailRow label="Minimum" value={`${meta.network.minWithdrawal} ${asset}`} />
                 </>
               )}
               {action === "deposit" && <DetailRow label="Cost basis" value="Market value at deposit" mono={false} />}
             </div>
           )}
-          <p className="flex items-start gap-2 text-[11px] leading-relaxed text-muted">
-            <Info className="mt-px h-3.5 w-3.5 shrink-0" />
-            {action === "deposit"
-              ? "A paper deposit credits the internal ledger. No address is generated and no funds are received on any network."
-              : action === "withdraw"
-                ? "A paper withdrawal debits the internal ledger. Nothing is sent to any address or network; the network fee is a simulated estimate."
-                : "Transfers move balances between your Spot (trading) and Vault (holding) accounts. Vault balances count toward your portfolio but cannot be traded."}
-          </p>
+          {action === "transfer" && (
+            <p className="flex items-start gap-2 text-[11px] leading-relaxed text-muted">
+              <Info className="mt-px h-3.5 w-3.5 shrink-0" />
+              Transfers move balances between your Spot (trading) and Vault (holding) accounts. Vault balances count toward your portfolio but cannot be traded.
+            </p>
+          )}
         </div>
       ) : (
         <div>
@@ -205,10 +202,10 @@ export function WalletActionDialog({ action, open, onOpenChange, asset: initialA
           <DetailRow label={action === "transfer" ? "From → to" : "Account"} value={action === "transfer" ? `${accountLabel(from)} → ${accountLabel(to)}` : accountLabel(acct)} mono={false} />
           <DetailRow label="Amount" value={asset === "USD" ? formatUsd(parsed.ok ? parsed.value : 0) : `${formatQty(parsed.ok ? parsed.value : 0, decimals)} ${asset}`} strong />
           {asset !== "USD" && value && <DetailRow label="Reference value" value={formatUsd(value)} />}
-          {action === "withdraw" && fee.gt(0) && <DetailRow label="Network fee (simulated)" value={`${fee.toFixed()} ${asset}`} />}
+          {action === "withdraw" && fee.gt(0) && <DetailRow label="Network fee" value={`${fee.toFixed()} ${asset}`} />}
           {action === "withdraw" && fee.gt(0) && parsed.ok && <DetailRow label="Total debited" value={`${formatQty(parsed.value.plus(fee), decimals)} ${asset}`} />}
           {note.trim() && <DetailRow label="Note" value={note.trim()} mono={false} />}
-          <p className="mt-3 rounded-lg bg-elevated px-3 py-2 text-[11px] text-muted">This entry is posted to the internal paper ledger and cannot be edited afterwards. It is not a blockchain transaction.</p>
+          <p className="mt-3 rounded-lg bg-elevated px-3 py-2 text-[11px] text-muted">This entry is posted to the ledger and cannot be edited afterwards.</p>
         </div>
       )}
     </Dialog>

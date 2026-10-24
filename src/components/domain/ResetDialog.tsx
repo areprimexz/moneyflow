@@ -63,7 +63,7 @@ export function ResetDialog({ open, onOpenChange, preset }: { open: boolean; onO
     : baselineMs > Date.now()
       ? "Baseline date cannot be in the future."
       : state === "demo" && Date.now() - baselineMs < 2 * 86_400_000
-        ? "A demo portfolio needs a baseline at least 2 days in the past."
+        ? "A sample portfolio needs a baseline at least 2 days in the past."
         : null;
 
   const mutation = useMutation({
@@ -79,7 +79,7 @@ export function ResetDialog({ open, onOpenChange, preset }: { open: boolean; onO
     onSuccess: async (data) => {
       await qc.invalidateQueries();
       onOpenChange(false);
-      toast.success("Paper account restarted", { description: `Opening balance ${formatUsd(data.account.initialBalance)}${state === "demo" ? " with demo history" : ""}.` });
+      toast.success("Account restarted", { description: `Opening balance ${formatUsd(data.account.initialBalance)}${state === "demo" ? " with sample history" : ""}.` });
     },
     onError: (e: Error) => toast.error("Reset failed — nothing was changed", { description: e.message }),
   });
@@ -89,7 +89,7 @@ export function ResetDialog({ open, onOpenChange, preset }: { open: boolean; onO
     <Dialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Restart paper account"
+      title="Restart account"
       description="This replaces the account with a fresh opening balance."
       size="md"
       footer={
@@ -135,19 +135,19 @@ export function ResetDialog({ open, onOpenChange, preset }: { open: boolean; onO
             }}
             options={[
               { value: "cash", label: "Cash only" },
-              { value: "demo", label: "Demo portfolio" },
+              { value: "demo", label: "Sample portfolio" },
             ]}
             stretch
           />
         </Field>
         <p className="-mt-2 text-xs text-muted">
           {state === "demo"
-            ? "Seeds deterministic sample trades between the baseline date and today, executed at the controlled market's historical prices through the normal ledger."
+            ? "Seeds deterministic sample trades between the baseline date and today, executed at historical market prices through the normal ledger."
             : "Starts with the opening balance in Spot cash and no holdings."}
         </p>
         <div className="space-y-2.5">
           <Checkbox label="Also reset preferences" description="Theme, density, chart and notification settings." checked={resetPrefs} onChange={setResetPrefs} />
-          <Checkbox label="Also reset the controlled market" description="Restore catalogue prices, volatility and movement rate." checked={resetMarket} onChange={setResetMarket} />
+          <Checkbox label="Also reset market data" description="Restore catalogue prices, volatility and movement rate." checked={resetMarket} onChange={setResetMarket} />
         </div>
         <Field label={<>Type <span className="num font-semibold text-fg">RESET</span> to confirm</>} htmlFor="reset-confirm">
           <Input id="reset-confirm" value={confirm} onChange={(e) => setConfirm(e.target.value)} autoComplete="off" placeholder="RESET" className="num" />

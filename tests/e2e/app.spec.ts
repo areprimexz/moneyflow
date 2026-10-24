@@ -134,7 +134,7 @@ test("settings: administrative credit updates the ledger and dashboard total", a
   await form.getByLabel("Reason").fill("Funding top-up");
   await form.getByRole("button", { name: "Review adjustment" }).click();
   await expect(form.getByText("Confirm the adjustment before posting.")).toBeVisible();
-  await form.getByText("I confirm this adjustment should be posted to the paper ledger").click();
+  await form.getByText("I confirm this adjustment should be posted to the ledger").click();
   await form.getByRole("button", { name: "Review adjustment" }).click();
   await page.getByRole("dialog").getByRole("button", { name: "Post credit" }).click();
   await expect(page.getByText("Balance adjustment posted")).toBeVisible();
@@ -150,7 +150,7 @@ test("settings: the starting balance can be changed and reset requires typing RE
   await page.getByLabel("Initial account balance (USD)").fill("1000000");
   await expect(page.getByText("Displayed as $1,000,000.00")).toBeVisible();
   await page.getByRole("button", { name: "Apply & restart account" }).click();
-  const dialog = page.getByRole("dialog", { name: "Restart paper account" });
+  const dialog = page.getByRole("dialog", { name: "Restart account" });
   const restart = dialog.getByRole("button", { name: "Restart account" });
   await expect(restart).toBeDisabled();
   await dialog.getByLabel(/to confirm/).fill("reset");
@@ -158,7 +158,7 @@ test("settings: the starting balance can be changed and reset requires typing RE
   await dialog.getByLabel(/to confirm/).fill("RESET");
   await expect(restart).toBeEnabled();
   await restart.click();
-  await expect(page.getByText("Paper account restarted")).toBeVisible();
+  await expect(page.getByText("Account restarted")).toBeVisible();
   await page.goto("/");
   await expect(page.getByTestId("portfolio-total")).toHaveText("$1,000,000.00");
 
@@ -170,7 +170,7 @@ test("settings: the starting balance can be changed and reset requires typing RE
   await expect(page.getByRole("button", { name: "Apply & restart account" })).toBeDisabled();
 });
 
-test("controlled market price changes revalue the portfolio", async ({ page, request }) => {
+test("market price changes revalue the portfolio", async ({ page, request }) => {
   await request.post("/api/orders", { data: { clientOrderId: "e2e-revalue-0001", symbol: "BTC", side: "buy", type: "market", quantity: "0.01" } });
   await request.put("/api/settings/market/assets/BTC", { data: { price: "100000.00", change24h: "0" } });
   await page.goto("/");
@@ -189,15 +189,14 @@ test("data persists across reloads", async ({ page, request }) => {
   await expect(page.getByRole("row", { name: /Dogecoin position details/ })).toContainText("1,000");
 });
 
-test("wallet deposit and transfer post paper-ledger entries", async ({ page, request }) => {
+test("wallet deposit and transfer post ledger entries", async ({ page, request }) => {
   await page.goto("/wallet");
   await page.getByRole("button", { name: "Deposit" }).first().click();
-  const dialog = page.getByRole("dialog", { name: "Paper deposit" });
-  await expect(dialog.getByText("Internal paper ledger only")).toBeVisible();
+  const dialog = page.getByRole("dialog", { name: "Deposit" });
   await dialog.getByLabel("Amount").fill("250");
   await dialog.getByRole("button", { name: "Review" }).click();
   await dialog.getByRole("button", { name: "Confirm deposit" }).click();
-  await expect(page.getByText("Paper deposit recorded")).toBeVisible();
+  await expect(page.getByText("Deposit recorded")).toBeVisible();
   expect((await apiAccount(request)).cash.spot).toBe("10249");
 
   await page.getByRole("button", { name: "Transfer" }).first().click();
@@ -221,7 +220,7 @@ test("transactions can be filtered, inspected and exported to CSV", async ({ pag
   await page.getByRole("row").filter({ hasText: "ADA" }).first().click();
   const drawer = page.getByRole("dialog", { name: "Transaction details" });
   await expect(drawer.getByRole("heading", { name: "Ledger entries" })).toBeVisible();
-  await expect(drawer.getByText("Settled on internal ledger (not a blockchain transaction)")).toBeVisible();
+  await expect(drawer.getByText("Settled", { exact: true })).toBeVisible();
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "Clear filters" }).click();
   await page.getByRole("textbox", { name: "Search" }).fill("e2e note");
@@ -243,8 +242,8 @@ test("analytics and reset workflow are reachable from the analytics page", async
   await expect(page.getByText("Win rate")).toBeVisible();
   await expect(page.getByText("Asset performance")).toBeVisible();
   await expect(page.getByText("Monthly performance")).toBeVisible();
-  await page.getByRole("button", { name: "Reset paper account" }).click();
-  await expect(page.getByRole("dialog", { name: "Restart paper account" })).toBeVisible();
+  await page.getByRole("button", { name: "Reset account" }).click();
+  await expect(page.getByRole("dialog", { name: "Restart account" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Restart account" })).toBeDisabled();
 });
 
